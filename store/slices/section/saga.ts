@@ -1,13 +1,22 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
-import { setArticleRequest } from "@store/slices/section/slice";
+import {
+  SectionStateActions,
+  setArticleRequest,
+} from "@store/slices/section/slice";
 import { IArticle } from "@store/slices/section/types";
-import SectionService from "../../../api/SectionService";
+import SectionService from "@services/SectionService";
+import { AxiosResponse } from "axios";
 
-function* getSectionInfos() {
+function* getSectionInfos(action: SectionStateActions) {
   console.log("getSectionInfos");
+  console.log(setArticleRequest.type);
   try {
-    const res: IArticle[] = yield call(SectionService.getSections);
-    yield put(setArticleRequest(res));
+    const res: AxiosResponse<IArticle[]> = yield call(
+      SectionService.getSections,
+      action.payload
+    );
+
+    yield put(setArticleRequest(res.data));
   } catch (e) {
     console.log(e);
   }
@@ -15,5 +24,6 @@ function* getSectionInfos() {
 
 export function* sectionSaga() {
   console.log("sectionSaga");
-  yield takeLatest(setArticleRequest, getSectionInfos);
+
+  yield takeLatest(setArticleRequest.type, getSectionInfos);
 }
