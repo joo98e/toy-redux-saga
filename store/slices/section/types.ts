@@ -12,5 +12,6 @@ export interface Section {
 }
 
 export interface ISectionState {
+  loading: boolean | null;
   sections: Section[];
 }

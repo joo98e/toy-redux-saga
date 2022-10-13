@@ -6,45 +6,48 @@ import {
   configureStore,
   Reducer,
 } from "@reduxjs/toolkit";
-import sectionState from "@store/slices/section/slice";
+import sectionReducer from "@store/slices/section/slice";
 import createSagaMiddleware from "@redux-saga/core";
 import logger from "redux-logger";
 import { all, fork } from "@redux-saga/core/effects";
-import { setSectionsSaga } from "@store/slices/section/saga";
+import { sectionSaga } from "@store/slices/section/saga";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const sagaMiddleWare = createSagaMiddleware();
 const enhancer = compose(applyMiddleware(sagaMiddleWare, logger));
-const RootReducer = (state: RootState, action: AnyAction) => {
+
+const rootReducer = (state: RootState, action: AnyAction) => {
   switch (action.type) {
     case HYDRATE:
-      return action.payload;
+      return {
+        ...state,
+        ...action.payload,
+      };
     default: {
-      const combined = combineReducers({
-        section: sectionState,
+      return combineReducers({
+        section: sectionReducer,
       });
-      return combined(state, action);
     }
   }
 };
 
 function* rootSaga() {
-  yield all([fork(setSectionsSaga)]);
+  console.log("yield all rootSaga");
+  yield all([fork(sectionSaga)]);
 }
 
-const store = configureStore({
-  reducer: RootReducer,
-  enhancers: [enhancer],
-});
-
 const createStore = () => {
-  return configureStore({
-    reducer: RootReducer as Reducer<RootState, AnyAction>,
+  const sagaMiddleware = createSagaMiddleware();
+  const middlewares = [sagaMiddleware];
+  const store = configureStore({
+    reducer: rootReducer as Reducer<RootState, AnyAction>,
+    enhancers: [enhancer],
+    middleware: middlewares,
   });
+  store.sagaTask = sagaMiddleware.run(rootSaga);
+  return store;
 };
 
-const wrapper = createWrapper(createStore);
+export type RootState = ReturnType<any>;
 
-sagaMiddleWare.run(rootSaga);
-export type RootState = ReturnType<typeof store.getState>;
-export default store;
+export const wrapper = createWrapper(createStore);

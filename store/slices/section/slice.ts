@@ -3,22 +3,13 @@ import { IArticle, ISectionState } from "@store/slices/section/types";
 import uuid from "react-uuid";
 
 const initialState: ISectionState = {
+  loading: true,
   sections: [
-    {
-      uuid: uuid(),
-      title: "연예",
-      articles: [],
-    },
-    {
-      uuid: uuid(),
-      title: "경제",
-      articles: [],
-    },
-    {
-      uuid: uuid(),
-      title: "스포츠",
-      articles: [],
-    },
+    // {
+    //   uuid: uuid(),
+    //   title: "연예",
+    //   articles: [],
+    // },
   ],
 };
 
@@ -26,10 +17,17 @@ const SectionSlice = createSlice({
   name: "sections",
   initialState,
   reducers: {
-    createArticle: (state: ISectionState, action: PayloadAction<any>) => {},
-    moveArticle: (state: ISectionState, action: PayloadAction<any>) => {},
+    createArticle: (state: ISectionState, action: PayloadAction<boolean>) => {},
+    moveArticle: (
+      state: ISectionState,
+      action: PayloadAction<IArticle[]>
+    ) => {},
     setArticle: (state: ISectionState, action: PayloadAction<IArticle[]>) => {
-      console.log(action.payload);
+      console.log("setArticle");
+      return {
+        ...state,
+        ...action.payload,
+      };
     },
   },
 });
