@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IArticle, ISectionState } from "@store/slices/section/types";
 import uuid from "react-uuid";
+import { act } from "react-dom/test-utils";
 
 const initialState: ISectionState = {
   loading: true,
@@ -22,12 +23,16 @@ const SectionSlice = createSlice({
       state: ISectionState,
       action: PayloadAction<IArticle[]>
     ) => {},
-    setArticle: (state: ISectionState, action: PayloadAction<IArticle[]>) => {
-      console.log("reducer");
-      return {
-        ...state,
-        ...action.payload,
-      };
+    setArticle: (state, action: PayloadAction<IArticle[]>) => {
+      console.log(123);
+      state.loading = false;
+      state.sections = [
+        {
+          uuid: uuid(),
+          title: "연예",
+          articles: action.payload,
+        },
+      ];
     },
   },
 });

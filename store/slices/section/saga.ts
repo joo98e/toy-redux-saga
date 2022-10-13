@@ -1,16 +1,12 @@
 import { call, put, takeLatest } from "@redux-saga/core/effects";
 import { setArticleRequest } from "@store/slices/section/slice";
 import { IArticle } from "@store/slices/section/types";
-import axios from "axios";
+import SectionService from "../../../api/SectionService";
 
-const REQUEST_URL = "https://jsonplaceholder.typicode.com/posts";
-
-function* getSectionInfos(action: any) {
-  console.log(123);
+function* getSectionInfos() {
+  console.log("getSectionInfos");
   try {
-    // @ts-ignore
-    const res: IArticle[] = yield call(axios.get(REQUEST_URL), action.payload);
-    console.log(res);
+    const res: IArticle[] = yield call(SectionService.getSections);
     yield put(setArticleRequest(res));
   } catch (e) {
     console.log(e);
@@ -18,7 +14,6 @@ function* getSectionInfos(action: any) {
 }
 
 export function* sectionSaga() {
-  console.log("takeLatest setSectionsSaga");
-  console.log(setArticleRequest);
+  console.log("sectionSaga");
   yield takeLatest(setArticleRequest, getSectionInfos);
 }

@@ -8,10 +8,11 @@ import {
 } from "@reduxjs/toolkit";
 import sectionReducer from "@store/slices/section/slice";
 import createSagaMiddleware from "@redux-saga/core";
-import logger from "redux-logger";
 import { all, fork } from "@redux-saga/core/effects";
 import { sectionSaga } from "@store/slices/section/saga";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
+
+const sagaMiddleware = createSagaMiddleware();
 
 const rootReducer = (state: RootState, action: AnyAction) => {
   switch (action.type) {
@@ -29,14 +30,13 @@ const rootReducer = (state: RootState, action: AnyAction) => {
 };
 
 function* rootSaga() {
-  console.log("yield all rootSaga");
+  console.log("rootSaga");
   yield all([fork(sectionSaga)]);
 }
 
 const createStore = () => {
-  const sagaMiddleware = createSagaMiddleware();
   const store = configureStore({
-    reducer: rootReducer as Reducer<RootState, AnyAction>,
+    reducer: rootReducer,
     middleware: [sagaMiddleware],
   });
   store.sagaTask = sagaMiddleware.run(rootSaga);
@@ -45,4 +45,4 @@ const createStore = () => {
 
 export type RootState = ReturnType<any>;
 
-export const wrapper = createWrapper(createStore);
+export const wrapper = createWrapper(createStore, {});
