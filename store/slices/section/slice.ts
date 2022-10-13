@@ -1,17 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IArticle, ISectionState } from "@store/slices/section/types";
 import uuid from "react-uuid";
-import { act } from "react-dom/test-utils";
 
 const initialState: ISectionState = {
   loading: true,
-  sections: [
-    // {
-    //   uuid: uuid(),
-    //   title: "연예",
-    //   articles: [],
-    // },
-  ],
+  sections: [],
 };
 
 const SectionSlice = createSlice({
