@@ -14,20 +14,9 @@ import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const rootReducer = (state: RootState, action: AnyAction) => {
-  switch (action.type) {
-    case HYDRATE:
-      return {
-        ...state,
-        ...action.payload,
-      };
-    default: {
-      return combineReducers({
-        section: sectionReducer,
-      });
-    }
-  }
-};
+const rootReducer = combineReducers({
+  section: sectionReducer,
+});
 
 function* rootSaga() {
   console.log("rootSaga");
@@ -43,6 +32,5 @@ const createStore = () => {
   return store;
 };
 
-export type RootState = ReturnType<any>;
-
+export type RootState = ReturnType<typeof rootReducer>;
 export const wrapper = createWrapper(createStore, {});

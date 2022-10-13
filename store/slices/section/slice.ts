@@ -4,7 +4,13 @@ import uuid from "react-uuid";
 
 const initialState: ISectionState = {
   loading: true,
-  sections: [],
+  sections: [
+    {
+      uuid: uuid(),
+      title: "섹션1",
+      articles: [],
+    },
+  ],
 };
 
 const SectionSlice = createSlice({
@@ -12,18 +18,14 @@ const SectionSlice = createSlice({
   initialState,
   reducers: {
     createArticle: (state: ISectionState, action: PayloadAction<boolean>) => {},
-    moveArticle: (
-      state: ISectionState,
-      action: PayloadAction<IArticle[]>
-    ) => {},
-    setArticle: (state, action: PayloadAction<IArticle[]>) => {
-      console.log(123);
+    moveArticle: (state: ISectionState, action: PayloadAction<any>) => {},
+    setArticle: (state: ISectionState, action: PayloadAction<any>) => {
       state.loading = false;
       state.sections = [
         {
           uuid: uuid(),
           title: "연예",
-          articles: action.payload,
+          articles: action.payload.data,
         },
       ];
     },
