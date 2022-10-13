@@ -23,7 +23,7 @@ const SectionSlice = createSlice({
       action: PayloadAction<IArticle[]>
     ) => {},
     setArticle: (state: ISectionState, action: PayloadAction<IArticle[]>) => {
-      console.log("setArticle");
+      console.log("reducer");
       return {
         ...state,
         ...action.payload,

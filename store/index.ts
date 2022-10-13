@@ -13,9 +13,6 @@ import { all, fork } from "@redux-saga/core/effects";
 import { sectionSaga } from "@store/slices/section/saga";
 import { createWrapper, HYDRATE } from "next-redux-wrapper";
 
-const sagaMiddleWare = createSagaMiddleware();
-const enhancer = compose(applyMiddleware(sagaMiddleWare, logger));
-
 const rootReducer = (state: RootState, action: AnyAction) => {
   switch (action.type) {
     case HYDRATE:
@@ -38,11 +35,9 @@ function* rootSaga() {
 
 const createStore = () => {
   const sagaMiddleware = createSagaMiddleware();
-  const middlewares = [sagaMiddleware];
   const store = configureStore({
     reducer: rootReducer as Reducer<RootState, AnyAction>,
-    enhancers: [enhancer],
-    middleware: middlewares,
+    middleware: [sagaMiddleware],
   });
   store.sagaTask = sagaMiddleware.run(rootSaga);
   return store;
