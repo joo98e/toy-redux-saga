@@ -19,7 +19,11 @@ const SectionSlice = createSlice({
   reducers: {
     createArticle: (state: ISectionState, action: PayloadAction<boolean>) => {},
     moveArticle: (state: ISectionState, action: PayloadAction<any>) => {},
-    setArticle: (state: ISectionState, action: PayloadAction<IArticle[]>) => {
+    getArticleRequest: () => {},
+    getArticleSuccess: (
+      state: ISectionState,
+      action: PayloadAction<IArticle[]>
+    ) => {
       state.loading = false;
       state.sections = [
         {
@@ -35,12 +39,14 @@ const SectionSlice = createSlice({
 export type SectionStateActions =
   | ReturnType<typeof createArticleRequest>
   | ReturnType<typeof moveArticleRequest>
-  | ReturnType<typeof setArticleRequest>;
+  | ReturnType<typeof getArticleRequest>
+  | ReturnType<typeof getArticleSuccess>;
 
 export const {
   createArticle: createArticleRequest,
   moveArticle: moveArticleRequest,
-  setArticle: setArticleRequest,
+  getArticleRequest: getArticleRequest,
+  getArticleSuccess: getArticleSuccess,
 } = SectionSlice.actions;
 
 const sectionState = SectionSlice.reducer;
