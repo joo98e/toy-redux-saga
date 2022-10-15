@@ -20,7 +20,3 @@ a {
 * {
     box-sizing: border-box;
 }
-
-:root {
-    --main-text-desc: #777777;
-}

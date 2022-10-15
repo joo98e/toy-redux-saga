@@ -1,7 +1,13 @@
+import TestDraggable from "@components/organisms/TestDraggable";
+
 interface Props {}
 
 const index = ({}: Props) => {
-  return <div></div>;
+  return (
+    <div style={{ background: "#FFF" }}>
+      <TestDraggable />
+    </div>
+  );
 };
 
 export default index;

@@ -5,6 +5,7 @@ import Button from "@components/atoms/Button";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { getArticleRequest } from "@store/slices/section/slice";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import Card from "@components/molecules/Card";
 
 const Container = styled.div`
@@ -63,7 +64,7 @@ interface Props {
   section: ISection;
 }
 
-const Section = ({ section, ...rest }: Props) => {
+const Section = ({ section }: Props) => {
   const dispatch = useDispatch();
 
   function handleClickLoadData() {
@@ -79,18 +80,27 @@ const Section = ({ section, ...rest }: Props) => {
   }
 
   return (
-    <Container {...rest}>
+    <Container>
       <div className={"flex-box"}>
         <Title>{section.title}</Title>
         <Button buttonType={"primary"} onClick={handleClickLoadData}>
           load data
         </Button>
       </div>
-      <div className={"scroll-box"}>
-        {section.articles.map((article) => {
-          return <Card key={article.id} article={article} />;
-        })}
-      </div>
+      <DragDropContext onDragEnd={() => {}}>
+        <div className={"scroll-box"}>
+          <Droppable droppableId={section.uuid}>
+            {(provided, snapshot) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {section.articles.map((article, index) => {
+                  return <Card index={index} article={article} />;
+                })}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </div>
+      </DragDropContext>
     </Container>
   );
 };

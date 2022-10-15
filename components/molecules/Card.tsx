@@ -1,6 +1,7 @@
 import { IArticle } from "@store/slices/section/types";
 import styled from "@emotion/styled";
 import Paragraph from "@components/atoms/Paragraph";
+import { Draggable } from "react-beautiful-dnd";
 
 const Container = styled.div`
   display: flex;
@@ -50,19 +51,25 @@ const DescriptionArea = styled.div`
 
 interface Props {
   article: IArticle;
+  index: number;
 }
 
-const Card = ({ article }: Props) => {
+const Card = ({ article, index }: Props) => {
+  console.log(index);
   return (
-    <Container>
-      <SubjectArea>
-        <div className={"avatar-blur"} />
-        <Paragraph>{article.title}</Paragraph>
-      </SubjectArea>
-      <DescriptionArea>
-        <Paragraph desc>{article.body}</Paragraph>
-      </DescriptionArea>
-    </Container>
+    <Draggable key={article.id} draggableId={String(article.id)} index={index}>
+      {(provided, snapshot, rubric) => (
+        <Container ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+          <SubjectArea>
+            <div className={"avatar-blur"} />
+            <Paragraph>{article.title}</Paragraph>
+          </SubjectArea>
+          <DescriptionArea>
+            <Paragraph desc>{article.body}</Paragraph>
+          </DescriptionArea>
+        </Container>
+      )}
+    </Draggable>
   );
 };
 
