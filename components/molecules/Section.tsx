@@ -5,9 +5,10 @@ import Button from "@components/atoms/Button";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { getArticleRequest } from "@store/slices/section/slice";
+import Card from "@components/molecules/Card";
 
 const Container = styled.div`
-  width: 300px;
+  width: 400px;
   height: 600px;
   border-radius: 0.4rem;
   padding: 1rem;
@@ -16,6 +17,24 @@ const Container = styled.div`
 
   animation: transform-container 0.5s;
   transition: all 0.5s ease-in-out;
+
+  @media (max-width: 512px) {
+    width: 500px;
+    height: 200px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  div.flex-box {
+    display: flex;
+    height: 50px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  div.scroll-box {
+    height: calc(100% - 50px);
+    overflow-y: auto;
+  }
 
   & * {
     animation: fade-child-nodes 1.5s;
@@ -26,7 +45,7 @@ const Container = styled.div`
       width: 0;
     }
     100% {
-      width: 300px;
+      width: 400px;
     }
   }
 
@@ -44,7 +63,7 @@ interface Props {
   section: ISection;
 }
 
-const Section = ({ section }: Props) => {
+const Section = ({ section, ...rest }: Props) => {
   const dispatch = useDispatch();
 
   function handleClickLoadData() {
@@ -60,13 +79,23 @@ const Section = ({ section }: Props) => {
   }
 
   return (
-    <Container>
-      <Title>{section.title}</Title>
-      <Button buttonType={"primary"} onClick={handleClickLoadData}>
-        load data
-      </Button>
+    <Container {...rest}>
+      <div className={"flex-box"}>
+        <Title>{section.title}</Title>
+        <Button buttonType={"primary"} onClick={handleClickLoadData}>
+          load data
+        </Button>
+      </div>
+      <div className={"scroll-box"}>
+        {section.articles.map((article) => {
+          return <Card key={article.id} article={article} />;
+        })}
+      </div>
     </Container>
   );
 };
 
-export default React.memo(Section, (prevProps, nextProps) => prevProps.section.uuid === nextProps.section.uuid);
+export default React.memo(Section, (prevProps, nextProps) => {
+  if (prevProps.section.uuid === nextProps.section.uuid || prevProps.section.articles === nextProps.section.articles)
+    return false;
+});

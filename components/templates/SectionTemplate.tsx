@@ -1,4 +1,3 @@
-import Section from "@components/molecules/Section";
 import styled from "@emotion/styled";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
@@ -6,6 +5,7 @@ import uuid from "react-uuid";
 import { createSectionRequest } from "@store/slices/section/slice";
 import { useForm } from "react-hook-form";
 import Button from "@components/atoms/Button";
+import Section from "@components/molecules/Section";
 
 const Container = styled.div`
   display: flex;
@@ -21,6 +21,10 @@ const SectionWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 2rem;
+
+  @media (max-width: 512px) {
+    flex-direction: column;
+  }
 `;
 
 const SectionButtonWrapper = styled.div`
@@ -42,6 +46,7 @@ const SectionTemplate = ({}: Props) => {
   const { register, watch, reset } = useForm<IForm>();
 
   function handleClickAddSection() {
+    if (!watch("title")) return;
     const request = {
       uuid: uuid(),
       title: watch("title"),
@@ -65,8 +70,8 @@ const SectionTemplate = ({}: Props) => {
         </Button>
       </SectionButtonWrapper>
       <SectionWrapper>
-        {sectionState.sections.map((section) => {
-          return <Section key={section.uuid} section={section} />;
+        {sectionState.sections.map((section, index) => {
+          return <Section key={index} section={section} />;
         })}
       </SectionWrapper>
     </Container>
