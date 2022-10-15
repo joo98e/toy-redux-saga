@@ -1,16 +1,9 @@
-import {
-  AnyAction,
-  applyMiddleware,
-  combineReducers,
-  compose,
-  configureStore,
-  Reducer,
-} from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import sectionReducer from "@store/slices/section/slice";
 import createSagaMiddleware from "@redux-saga/core";
 import { all, fork } from "@redux-saga/core/effects";
 import { sectionSaga } from "@store/slices/section/saga";
-import { createWrapper, HYDRATE } from "next-redux-wrapper";
+import { createWrapper } from "next-redux-wrapper";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -19,7 +12,6 @@ const rootReducer = combineReducers({
 });
 
 function* rootSaga() {
-  console.log("rootSaga");
   yield all([fork(sectionSaga)]);
 }
 

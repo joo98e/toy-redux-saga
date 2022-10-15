@@ -5,7 +5,7 @@ export interface IArticle {
   body: string;
 }
 
-export interface Section {
+export interface ISection {
   uuid: string;
   title: string;
   articles: IArticle[];
@@ -13,5 +13,11 @@ export interface Section {
 
 export interface ISectionState {
   loading: boolean | null;
-  sections: Section[];
+  amountOfCurrentlyLoadedData: number;
+  sections: ISection[];
+}
+
+export interface ICreateSectionRequest {
+  uuid: string;
+  title: string;
 }
