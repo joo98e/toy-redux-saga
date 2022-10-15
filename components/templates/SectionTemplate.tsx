@@ -9,9 +9,11 @@ import Button from "@components/atoms/Button";
 
 const Container = styled.div`
   display: flex;
+  height: 100vh;
   justify-content: center;
   flex-direction: column;
-  height: 100vh;
+  gap: 1rem;
+  padding: 1rem;
 `;
 
 const SectionWrapper = styled.div`
@@ -22,7 +24,10 @@ const SectionWrapper = styled.div`
 `;
 
 const SectionButtonWrapper = styled.div`
-  width: 200px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  width: auto;
 `;
 
 interface IForm {
@@ -34,15 +39,18 @@ interface Props {}
 const SectionTemplate = ({}: Props) => {
   const dispatch = useDispatch();
   const sectionState = useSelector((state: RootState) => state.section);
-  const { register, watch } = useForm<IForm>();
+  const { register, watch, reset } = useForm<IForm>();
 
   function handleClickAddSection() {
     const request = {
       uuid: uuid(),
-      title: "123",
+      title: watch("title"),
     };
     try {
       dispatch(createSectionRequest(request));
+      reset({
+        title: "",
+      });
     } catch (e) {
       console.log(e.message);
     }
@@ -50,17 +58,17 @@ const SectionTemplate = ({}: Props) => {
 
   return (
     <Container>
+      <SectionButtonWrapper>
+        <input type={"text"} {...register("title", { required: true })} />
+        <Button disabled={sectionState.sections.length === 3} buttonType={"primary"} onClick={handleClickAddSection}>
+          add section
+        </Button>
+      </SectionButtonWrapper>
       <SectionWrapper>
         {sectionState.sections.map((section) => {
           return <Section key={section.uuid} section={section} />;
         })}
       </SectionWrapper>
-      <SectionButtonWrapper>
-        <input type={"text"} {...register("title", { required: true })} />
-        <Button disabled={sectionState.sections.length === 3} buttonType={"secondary"} onClick={handleClickAddSection}>
-          add section
-        </Button>
-      </SectionButtonWrapper>
     </Container>
   );
 };

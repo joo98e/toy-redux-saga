@@ -21,3 +21,8 @@ export interface ICreateSectionRequest {
   uuid: string;
   title: string;
 }
+
+export interface IGetArticlesRequest {
+  data: IArticle[];
+  uuid: string;
+}

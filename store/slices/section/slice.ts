@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IArticle, ICreateSectionRequest, ISectionState } from "@store/slices/section/types";
+import { ICreateSectionRequest, IGetArticlesRequest, ISectionState } from "@store/slices/section/types";
 import uuid from "react-uuid";
 
 const initialState: ISectionState = {
@@ -33,17 +33,18 @@ const SectionSlice = createSlice({
     },
     moveSection: (state: ISectionState, action: PayloadAction<any>) => {},
     moveArticle: (state: ISectionState, action: PayloadAction<any>) => {},
-    getArticleRequest: () => {},
-    getArticleSuccess: (state: ISectionState, action: PayloadAction<IArticle[]>) => {
-      state.loading = false;
-      state.sections = [
-        {
-          uuid: state.sections[0].uuid,
-          title: state.sections[0].title,
+    getArticleRequest: (state, action) => {},
+    getArticleSuccess: (state: ISectionState, action: PayloadAction<IGetArticlesRequest>) => {
+      state.sections.forEach((section, index) => {
+        if (section.uuid === action.payload.uuid) {
+          state.sections[index].articles = action.payload.data.slice(
+            state.amountOfCurrentlyLoadedData,
+            state.amountOfCurrentlyLoadedData + 10
+          );
+        }
+      });
 
-          articles: action.payload.slice(state.amountOfCurrentlyLoadedData, state.amountOfCurrentlyLoadedData + 10),
-        },
-      ];
+      state.loading = false;
       state.amountOfCurrentlyLoadedData = state.amountOfCurrentlyLoadedData + 10;
     },
   },

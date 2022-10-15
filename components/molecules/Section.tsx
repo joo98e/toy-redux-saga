@@ -3,6 +3,8 @@ import { ISection } from "@store/slices/section/types";
 import Title from "@components/atoms/Title";
 import Button from "@components/atoms/Button";
 import React from "react";
+import { useDispatch } from "react-redux";
+import { getArticleRequest } from "@store/slices/section/slice";
 
 const Container = styled.div`
   width: 300px;
@@ -43,10 +45,24 @@ interface Props {
 }
 
 const Section = ({ section }: Props) => {
+  const dispatch = useDispatch();
+
+  function handleClickLoadData() {
+    try {
+      dispatch(
+        getArticleRequest({
+          uuid: section.uuid,
+        })
+      );
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
     <Container>
       <Title>{section.title}</Title>
-      <Button buttonType={"primary"} onClick={() => {}}>
+      <Button buttonType={"primary"} onClick={handleClickLoadData}>
         load data
       </Button>
     </Container>

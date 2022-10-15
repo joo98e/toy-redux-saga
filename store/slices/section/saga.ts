@@ -4,17 +4,22 @@ import { IArticle } from "@store/slices/section/types";
 import SectionService from "@services/SectionService";
 import { AxiosResponse } from "axios";
 
-function* getSectionInfos(action: SectionStateActions) {
+function* getArticles(action: SectionStateActions) {
   try {
     // @ts-ignore
-    const res: AxiosResponse<IArticle[]> = yield call(SectionService.getSections, action.payload);
+    const res: AxiosResponse<IArticle[]> = yield call(SectionService.getSections);
 
-    yield put(getArticleSuccess(res.data));
+    yield put(
+      getArticleSuccess({
+        uuid: action.payload.uuid,
+        data: res.data,
+      })
+    );
   } catch (e) {
     console.log(e);
   }
 }
 
 export function* sectionSaga() {
-  yield takeLatest(getArticleRequest.type, getSectionInfos);
+  yield takeLatest(getArticleRequest, getArticles);
 }
