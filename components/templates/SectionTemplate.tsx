@@ -4,6 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@store/index";
 import uuid from "react-uuid";
 import { createSectionRequest } from "@store/slices/section/slice";
+import { useForm } from "react-hook-form";
+import Button from "@components/atoms/Button";
 
 const Container = styled.div`
   display: flex;
@@ -23,11 +25,16 @@ const SectionButtonWrapper = styled.div`
   width: 200px;
 `;
 
+interface IForm {
+  title: string;
+}
+
 interface Props {}
 
 const SectionTemplate = ({}: Props) => {
   const dispatch = useDispatch();
   const sectionState = useSelector((state: RootState) => state.section);
+  const { register, watch } = useForm<IForm>();
 
   function handleClickAddSection() {
     const request = {
@@ -49,7 +56,10 @@ const SectionTemplate = ({}: Props) => {
         })}
       </SectionWrapper>
       <SectionButtonWrapper>
-        <button onClick={handleClickAddSection}>add section</button>
+        <input type={"text"} {...register("title", { required: true })} />
+        <Button disabled={sectionState.sections.length === 3} buttonType={"secondary"} onClick={handleClickAddSection}>
+          add section
+        </Button>
       </SectionButtonWrapper>
     </Container>
   );

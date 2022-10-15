@@ -1,10 +1,8 @@
 import styled from "@emotion/styled";
 import { ISection } from "@store/slices/section/types";
 import Title from "@components/atoms/Title";
-
-// animation: animation-name animation-duration animation-delay animation-iteration-count animation-timing-function animation-direction fill-mode play-state;
-//
-// * 이름 > 실행속도 > 지연시간 > 반복횟수 > 애니메이션 속도 조절/그래프 >  반복방향설정 > 끝난후위치 > 실행or정지
+import Button from "@components/atoms/Button";
+import React from "react";
 
 const Container = styled.div`
   width: 300px;
@@ -48,9 +46,11 @@ const Section = ({ section }: Props) => {
   return (
     <Container>
       <Title>{section.title}</Title>
-      <button>데이터 로드하기</button>
+      <Button buttonType={"primary"} onClick={() => {}}>
+        load data
+      </Button>
     </Container>
   );
 };
 
-export default Section;
+export default React.memo(Section, (prevProps, nextProps) => prevProps.section.uuid === nextProps.section.uuid);
