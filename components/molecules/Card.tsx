@@ -2,6 +2,7 @@ import { IArticle } from "@store/slices/section/types";
 import styled from "@emotion/styled";
 import Paragraph from "@components/atoms/Paragraph";
 import { Draggable } from "react-beautiful-dnd";
+import React, { useEffect } from "react";
 
 const Container = styled.div`
   display: flex;
@@ -55,7 +56,9 @@ interface Props {
 }
 
 const Card = ({ article, index }: Props) => {
-  console.log(index);
+  useEffect(() => {
+    console.log("rerender");
+  });
   return (
     <Draggable key={article.id} draggableId={String(article.id)} index={index}>
       {(provided, snapshot, rubric) => (
@@ -73,4 +76,4 @@ const Card = ({ article, index }: Props) => {
   );
 };
 
-export default Card;
+export default React.memo(Card, (prevProps, nextProps) => prevProps.article.id !== nextProps.article.id);

@@ -4,8 +4,8 @@ import Title from "@components/atoms/Title";
 import Button from "@components/atoms/Button";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { getArticleRequest } from "@store/slices/section/slice";
-import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { getArticleRequest, moveArticleRequest } from "@store/slices/section/slice";
+import { DragDropContext, Droppable, DropResult, ResponderProvided } from "react-beautiful-dnd";
 import Card from "@components/molecules/Card";
 
 const Container = styled.div`
@@ -37,7 +37,7 @@ const Container = styled.div`
     overflow-y: auto;
   }
 
-  & * {
+  & *.fade-child {
     animation: fade-child-nodes 1.5s;
   }
 
@@ -79,21 +79,31 @@ const Section = ({ section }: Props) => {
     }
   }
 
+  function handleDragEnd(result: DropResult, provided: ResponderProvided) {
+    dispatch(
+      moveArticleRequest({
+        uuid: section.uuid,
+        source: result.source,
+        destination: result.destination,
+      })
+    );
+  }
+
   return (
     <Container>
-      <div className={"flex-box"}>
+      <div className={"flex-box fade-child"}>
         <Title>{section.title}</Title>
         <Button buttonType={"primary"} onClick={handleClickLoadData}>
           load data
         </Button>
       </div>
-      <DragDropContext onDragEnd={() => {}}>
+      <DragDropContext onDragEnd={handleDragEnd}>
         <div className={"scroll-box"}>
           <Droppable droppableId={section.uuid}>
             {(provided, snapshot) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
                 {section.articles.map((article, index) => {
-                  return <Card index={index} article={article} />;
+                  return <Card key={article.id} index={index} article={article} />;
                 })}
                 {provided.placeholder}
               </div>

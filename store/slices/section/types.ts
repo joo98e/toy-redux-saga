@@ -26,3 +26,15 @@ export interface IGetArticlesRequest {
   data: IArticle[];
   uuid: string;
 }
+
+export interface IMoveArticleRequest {
+  uuid: string;
+  source: {
+    droppableId: any;
+    index: number;
+  };
+  destination: {
+    droppableId: any;
+    index: number;
+  };
+}

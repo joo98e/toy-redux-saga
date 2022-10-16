@@ -1,6 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ICreateSectionRequest, IGetArticlesRequest, ISectionState } from "@store/slices/section/types";
+import {
+  IArticle,
+  ICreateSectionRequest,
+  IGetArticlesRequest,
+  IMoveArticleRequest,
+  ISectionState,
+} from "@store/slices/section/types";
 import uuid from "react-uuid";
+import _ from "lodash";
 
 const initialState: ISectionState = {
   loading: true,
@@ -32,7 +39,15 @@ const SectionSlice = createSlice({
       ];
     },
     moveSection: (state: ISectionState, action: PayloadAction<any>) => {},
-    moveArticle: (state: ISectionState, action: PayloadAction<any>) => {},
+    moveArticle: (state: ISectionState, action: PayloadAction<IMoveArticleRequest>) => {
+      state.sections.find((section, index) => {
+        if (section.uuid === action.payload.uuid) {
+          const copiedSection: IArticle = _.cloneDeep(state.sections[index].articles[action.payload.source.index]);
+          state.sections[index].articles.splice(action.payload.source.index, 1);
+          state.sections[index].articles.splice(action.payload.destination.index, 0, copiedSection);
+        }
+      });
+    },
     getArticleRequest: (state, action) => {},
     getArticleSuccess: (state: ISectionState, action: PayloadAction<IGetArticlesRequest>) => {
       state.sections.forEach((section, index) => {
